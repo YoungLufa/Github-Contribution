@@ -7,23 +7,14 @@ const FILE_PATH = "./data.json";
 const makeCommit = (n) => {
   if (n === 0) return simpleGit().push();
 
-  const x = randomInt(0, 54);
-  const y = randomInt(0, 6);
+  const startDate = new Date('2021-12-31');
+  const endDate = new Date('2023-07-31');
+  const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)); // Total days from Dec 31, 2021 to July 31, 2023
 
-  const DATE = new Date();
+  const randomDay = randomInt(0, totalDays);
 
-  DATE.setUTCFullYear(DATE.getUTCFullYear() - 1);
-  DATE.setDate(DATE.getDate() + 1);
-  DATE.setDate(DATE.getDate() + x * 7);
-  DATE.setDate(DATE.getDate() + y);
-  /*
-     * you can speed up with this ::
-      DATE.setDate(
-           DATE.getDate()+(((x*7)+y)+1)
-       );
-     *
-     *
-     */
+  const DATE = new Date(startDate);
+  DATE.setDate(startDate.getDate() + randomDay);
 
   const data = {
     date: DATE.valueOf(),
@@ -32,7 +23,6 @@ const makeCommit = (n) => {
   console.log(DATE);
 
   jsonfile.writeFile(FILE_PATH, data, () => {
-    // git commit --date = ""
     simpleGit()
       .add([FILE_PATH])
       .commit(
@@ -43,4 +33,5 @@ const makeCommit = (n) => {
   });
 };
 
+// Adjust the number of commits as needed
 makeCommit(500);
